@@ -7,10 +7,18 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model usuarios {
-  id_user  Int    @id @default(autoincrement())
-  nombre   String @unique @db.VarChar(100)
-  password String @db.VarChar(100)
-  rol      String @db.Char(2)
+model Usuario {
+  id_user  Int      @id @default(autoincrement())
+  nombre   String   @unique @db.VarChar(100)
+  password String   @db.VarChar(100)
+  foto     String   @db.VarChar(450)
+  historias Historia[]
 }
 
+model Historia {
+  id_historia       Int      @id @default(autoincrement())
+  contenidoTexto    String
+  contenidoMedia    String
+  usuario           Usuario   @relation(fields: [id_usuario], references: [id_user])
+  id_usuario        Int
+}

@@ -2,6 +2,7 @@ import express from 'express'
 import cors from 'cors'
 
 import usersRoutes from './routes/users.routes.js'
+import storiesRoutes from './routes/historias.routes.js'
 
 const app = express()
 
@@ -20,6 +21,7 @@ app.use(cors(corsOptions));
 app.use(express.json())
 
 app.use('/', usersRoutes);
+app.use('/', storiesRoutes);
 
 app.listen(3000)
 

@@ -8,7 +8,7 @@ const router = Router();
 router.get('/users', async (req, res) => {
     try {
 
-        const users = await prisma.usuarios.findMany()
+        const users = await prisma.usuario.findMany();
         res.json(users);
         
     } catch (error) {
@@ -26,7 +26,7 @@ router.post('/login', async (req, res) => {
 
     try {
 
-        const user = await prisma.usuarios.findFirst({
+        const user = await prisma.usuario.findFirst({
             where: {
                 nombre: nombre,
             },
@@ -41,7 +41,7 @@ router.post('/login', async (req, res) => {
             return res.status(401).json({ error: 'Contraseña incorrecta' });
         
     
-        return res.json({ message: 'Inicio de sesión exitoso' });
+        return res.json({foto: user.foto, id_user: user.id_user});
 
     } catch (error) {
 
@@ -54,12 +54,12 @@ router.post('/login', async (req, res) => {
 //NOTE - Creación de Usuarios
 
 router.post('/users', async (req, res) =>{
-    const { nombre, password, rol } = req.body;
+    const { nombre, password, foto } = req.body;
     const passCrypt = await cryptPassword(password);
 
   try {
 
-    const sameUser = await prisma.usuarios.findFirst({
+    const sameUser = await prisma.usuario.findFirst({
         where: {
             nombre: nombre,
         }
@@ -68,11 +68,11 @@ router.post('/users', async (req, res) =>{
     if(sameUser)
         return res.status(404).json({error: "Este nombre de usuario ya existe"})
 
-   const newUser = await prisma.usuarios.create({
+   const newUser = await prisma.usuario.create({
        data: {
         nombre: nombre,
         password: passCrypt,
-        rol: rol,
+        foto: foto
        }
     })
 
@@ -90,19 +90,19 @@ router.post('/users', async (req, res) =>{
 
 router.put('/users/:id_user', async(req, res) =>{
     
-    const { nombre, password, rol } = req.body;
+    const { nombre, password, foto } = req.body;
 
     const passWCrypt = await cryptPassword(password);
 
     try {
-        const updateUser = await prisma.usuarios.update({
+        const updateUser = await prisma.usuario.update({
             where: {
                 id_user: parseInt(req.params.id_user),
             },
             data: {
                 nombre: nombre,
                 password: passWCrypt,
-                rol: rol,
+                foto: foto
             }    
         })
 
@@ -122,7 +122,7 @@ router.put('/users/:id_user', async(req, res) =>{
 router.delete('/users/:id_user', async(req,res) => {
 
     try {
-        const deleteUser = await prisma.usuarios.delete({
+        const deleteUser = await prisma.usuario.delete({
             where: {
                 id_user: parseInt(req.params.id_user),
             },
