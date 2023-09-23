@@ -13,12 +13,33 @@ model Usuario {
   password String   @db.VarChar(100)
   foto     String   @db.VarChar(450)
   historias Historia[]
+  comentario Comentario[]
+  publicacion Publicacion[]
 }
 
 model Historia {
   id_historia       Int      @id @default(autoincrement())
   contenidoTexto    String
   contenidoMedia    String
+  usuario           Usuario   @relation(fields: [id_usuario], references: [id_user])
+  id_usuario        Int
+  comentario Comentario[]
+}
+
+model Comentario {
+  id_comentario      Int @id @default(autoincrement())
+  contenido          String
+  reaccion           String
+  historia           Historia   @relation(fields: [id_historia], references: [id_historia])
+  id_historia        Int
+  usuario           Usuario   @relation(fields: [id_usuario], references: [id_user])
+  id_usuario        Int
+}
+
+model Publicacion {
+  id_publicacion Int @id @default(autoincrement())
+  contenido String
+  multimedia String
   usuario           Usuario   @relation(fields: [id_usuario], references: [id_user])
   id_usuario        Int
 }
